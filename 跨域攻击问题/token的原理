@@ -1,0 +1,77 @@
+后端生成一个token交给前端 当前端要提交的时候带上token 前端提交的时候后端会验证token是否正确
+
+用到uuid
+
+    // 学生列表的路由
+    router.get("/list", (req, res) => {
+        // session的默认有效期是一次会话
+        // if (req.session.loginUser) {
+        //     res.render("students", { stus: STUDENT_ARR })
+        // } else {
+        //     res.redirect("/")
+        // }
+
+        // 生成一个token
+        const csrfToken = uuid()
+
+        // 将token添加到session中
+        req.session.csrfToken = csrfToken
+
+        req.session.save(() => {
+            res.render("students", {
+                stus: STUDENT_ARR,
+                username: req.session.loginUser,
+                csrfToken
+            })
+        })
+    })
+前端页面
+     <form action="/students/add" method="post">
+     这里加上一个带token的隐藏框
+                <input type="hidden" name="_csrf" value="<%=csrfToken %>">
+                <div>姓名：<input type="text" name="name" /></div>
+                <div>
+                    年龄：<input type="number" max="150" min="0" name="age" />
+                </div>
+                <div>
+                    性别：<input type="radio" name="gender" value="男" /> 男
+                    <input type="radio" name="gender" value="女" /> 女
+                </div>
+                <div>地址：<input type="text" name="address" /></div>
+                <div>
+                    <button>添加</button>
+                </div>
+            </form>
+
+添加的时候验证uuid
+    // 添加学生的路由
+    router.post("/add", (req, res, next) => {
+        // 客户端发送的token
+        const csrfToken = req.body._csrf
+        const sessionToken = req.session.csrfToken
+        req.session.csrfToken = null
+
+        // 将客户端的token和 session中的token进行比较
+        if (sessionToken=== csrfToken) {
+            const id = STUDENT_ARR.at(-1) ? STUDENT_ARR.at(-1).id + 1 : 1
+
+            const newUser = {
+                id,
+                name: req.body.name,
+                age: +req.body.age,
+                gender: req.body.gender,
+                address: req.body.address
+            }
+
+            STUDENT_ARR.push(newUser)
+
+
+            req.session.save(() => {
+                //调用next交由后续路由继续处理
+                next()
+            })
+
+        }else{
+            res.status(403).send("token错误")
+        }
+    })

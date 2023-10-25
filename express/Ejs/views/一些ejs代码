@@ -1,0 +1,75 @@
+EJS是一种嵌入式JavaScript模板引擎，用于在服务器端生成HTML，并支持JavaScript语法进行条件判断、循环等操作。下面是一些常用的EJS标签和用法的总结：
+
+### 1. 输出变量
+
+`<%= %>`：输出变量的值。
+
+```html
+<p><%= user.name %></p>
+```
+
+如果 `user` 是一个对象，其中有一个 `name` 属性，那么这个标签将输出用户的名字。
+
+### 2. 未转义的输出
+
+`<%- %>`：输出未转义的变量的值。
+
+```html
+<p><%- someHtmlContent %></p>
+```
+
+如果 `someHtmlContent` 包含HTML标签，使用 `<%- %>` 将不会转义HTML标签，而是原样输出。
+
+### 3. 条件判断
+
+`<% if %> <% else if %> <% else %> <% end %>`
+
+```html
+<% if (user.isAdmin) { %>
+  <p>管理员</p>
+<% } else { %>
+  <p>普通用户</p>
+<% } %>
+```
+
+在这个例子中，根据 `user.isAdmin` 的值，页面将显示不同的信息。
+
+### 4. 循环
+
+`<% for %> <% end %>`
+
+```html
+<ul>
+<% for (let i = 0; i < users.length; i++) { %>
+  <li><%= users[i].name %></li>
+<% } %>
+</ul>
+```
+
+在这个例子中，它将遍历 `users` 数组，并为每个用户创建一个列表项。
+
+### 5. forEach 循环
+
+```html
+<ul>
+<% users.forEach(function(user) { %>
+  <li><%= user.name %></li>
+<% }); %>
+</ul>
+```
+
+这个例子也是遍历 `users` 数组，但使用了 `forEach` 方法。
+
+### 6. include 包含其他模板
+
+`<%- include('relative/path/to/template') %>`
+
+```html
+<%- include('header') %>
+<p><%= user.name %></p>
+<%- include('footer') %>
+```
+
+在这个例子中，`header` 和 `footer` 模板将被插入到主模板中。
+
+通过这些标签和用法，你可以在EJS模板中使用JavaScript的完整功能，从而使你的HTML生成变得非常灵活和强大。

@@ -1,0 +1,47 @@
+恶意网址 在你登录以后 可以通过这个网址用你的管理员cookie 对你自己的网站进行攻击
+
+//  当点击到这个页面 给你的网站发送一个请求 你的网站就会删除id为7的学生
+    当你的浏览器已经有你登录的cookie以后
+
+    <h1>这个网站中有很多你想要的东西！</h1>
+    <img src="http://localhost:3000/students/delete?id=7">
+
+//现在的大部分浏览器已经避免了跨域攻击
+
+ csrf攻击
+        - 跨站请求伪造
+        http://localhost:3000/students/delete?id=3
+        - 现在大部分的浏览器的都不会在跨域的情况下自动发送cookie
+            这个设计就是为了避免csrf的攻击
+        - 如何解决？
+            1. 使用referer头来检查请求的来源
+            2. 使用验证码
+            3. 尽量使用post请求（结合token）
+                     - token（令牌）
+                               - 可以在创建表单时随机生成一个令牌
+                                   然后将令牌存储到session中，并通过模板发送给用户
+                                   用户提交表单时，必须将token发回，才可以进行后续操作
+                                   （可以使用uuid来生成token）
+                                   npm install uuid
+                                   const uuid = require("uuid").v4
+                     后面在Ajax那里讲
+
+
+referer检查请求头
+    router.use((req, res, next) => {
+        // 获取一个请求头referer
+        const referer = req.get("referer")
+        // console.log("请求来自：", referer)
+        // if(!referer || !referer.startsWith("http://localhost:3000/")){
+        //     res.status(403).send("你没有这个权限！")
+        //     return
+        // }
+
+        // 登录以后，req.session.loginUser是undefined
+        if (req.session.loginUser) {
+            next()
+        } else {
+            res.redirect("/")
+        }
+    })
+

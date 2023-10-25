@@ -1,0 +1,61 @@
+### JavaScript事件循环和Promise执行原理
+
+#### 事件循环(Event Loop)
+JavaScript是单线程的，依赖事件循环来异步执行任务。主要有两种任务类型：
+1. **宏任务(Macro-task)**: 如`setTimeout`, `setInterval`, `setImmediate`, `I/O`, UI渲染等。
+2. **微任务(Micro-task)**: 如`Promise.then`, `MutationObserver`, `queueMicrotask`等。
+
+事件循环的执行顺序为：调用栈 → 微任务队列 → 宏任务队列。
+
+#### Promise执行原理
+1. 当`Promise`状态从pending变为fulfilled时，`.then`回调函数被放入微任务队列。
+2. `.then`, `.catch`, `.finally`均会生成微任务。
+
+#### queueMicrotask()
+用来向微任务队列中添加任务。
+
+```javascript
+queueMicrotask(() => console.log(2));
+```
+
+#### 示例解析
+```javascript
+console.log(1);
+
+setTimeout(() => console.log(2));
+
+Promise.resolve().then(() => console.log(3));
+
+Promise.resolve().then(() => setTimeout(() => console.log(4)));
+
+Promise.resolve().then(() => console.log(5));
+
+setTimeout(() => console.log(6));
+
+console.log(7);
+```
+执行顺序:
+1. 同步代码执行：1和7。
+2. 微任务队列执行：3, 5。
+3. 宏任务队列执行：2, 6, 4。
+
+因此，输出为：1, 7, 3, 5, 2, 6, 4。
+
+### 代码例子解释
+```javascript
+// 1. 宏任务：延迟0ms后执行
+setTimeout(() => console.log(1));
+
+// 2. 微任务：立即执行
+Promise.resolve(1).then(() => console.log(2));
+
+// 3. 微任务队列中嵌套微任务：立即执行
+Promise.resolve().then(() => {
+    Promise.resolve().then(() => console.log(1))
+});
+
+// 4. 微任务：立即执行
+queueMicrotask(() => console.log(2));
+```
+
+输出为：2, 1, 2, 1。微任务优先于宏任务执行，内层的微任务会在外层微任务执行完后立即执行。

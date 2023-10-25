@@ -1,0 +1,59 @@
+需要引入
+const fs = require("node:fs")
+    //当要用promise版本的fs.readFile()时
+const fs = require("node:fs/promises")
+
+const { buffer } = require("stream/consumers")
+
+//readFileSync() 同步的读取文件的方法，会阻塞后边代码的执行
+// 当我们通过fs模块读取磁盘中的数据时，读取到的数据总会以Buffer对象的形式返回
+// Buffer是一个临时用来存储数据的缓冲区 buf直接输出是Buffer对象
+    读取的路径这么写 path.resolve(__dirname, "./hello.txt")
+    拿到的结果buf用toString获取字符串
+    代码实现
+    // const buf = fs.readFileSync(path.resolve(__dirname, "./hello.txt"))
+    // console.log(buf.toString())
+
+//readFile() 异步的读取文件的方法 不阻塞方法的执行
+    普通版本
+    // fs.readFile(
+    //     path.resolve(__dirname, "./hello.txt"),
+    //     (err, buffer) => {
+
+    //         if (err) {
+    //             console.log("出错了~")
+    //         } else {
+    //             console.log(buffer.toString())
+    //         }
+    //     }
+    // )
+
+    /*
+        Promise版本的fs的方法
+        const fs = require("node:fs/promises")
+        const { buffer } = require("stream/consumers")
+    */
+    // fs.readFile(path.resolve(__dirname, "./hello.txt"))
+    //     .then(buffer => {
+    //         console.log(buffer.toString())
+    //     })
+    //     .catch(e => {
+    //         console.log("出错了~")
+    //     })
+
+    /*
+        用await来实现
+    */
+     (async () => {
+
+            try {
+                const buffer = await fs.readFile(path.resolve(__dirname, "./hello.txt"))
+                console.log(buffer.toString())
+            } catch (e) {
+                console.log("出错了~~")
+            }
+
+
+        })()
+
+fs的其他的方法

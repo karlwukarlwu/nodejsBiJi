@@ -1,0 +1,105 @@
+当然，继续深入对于`Promise`的知识点：
+
+### 6. 链式调用与值的传递
+
+当在`.then()`中返回一个值，它会被传递给下一个`.then()`中的回调。
+
+```javascript
+Promise.resolve(1)
+    .then((result) => {
+        console.log(result);  // 输出: 1
+        return result + 1;
+    })
+    .then((result) => {
+        console.log(result);  // 输出: 2
+    });
+```
+
+### 7. 返回新的Promise
+
+`.then()`或`.catch()`中可以返回一个新的Promise，后续的`.then()`会等待该Promise。
+
+```javascript
+const delayedIncrement = (value) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(value + 1);
+        }, 1000);
+    });
+};
+
+Promise.resolve(1)
+    .then(delayedIncrement)
+    .then((result) => {
+        console.log(result);  // 输出: 2（延迟1秒后输出）
+    });
+```
+
+### 8. 错误传播
+
+一个`.catch()`可以捕获其前面所有`.then()`中的错误。
+
+```javascript
+Promise.resolve()
+    .then(() => {
+        throw new Error("错误");
+    })
+    .then(() => {
+        console.log("这里不会被执行");
+    })
+    .catch((error) => {
+        console.error(error.message);  // 输出: 错误
+    });
+```
+
+### 9. Promise.all()
+
+`Promise.all()`接收一个Promise数组，当所有Promise都成功时返回一个数组的结果，如果有一个失败，则整体失败。
+
+```javascript
+const promise1 = Promise.resolve(1);
+const promise2 = Promise.resolve(2);
+
+Promise.all([promise1, promise2])
+    .then((results) => {
+        console.log(results);  // 输出: [1, 2]
+    });
+```
+
+### 10. Promise.race()
+
+`Promise.race()`接收一个Promise数组，结果由第一个完成的Promise决定。
+
+```javascript
+const promise1 = new Promise((resolve) => {
+    setTimeout(() => {
+        resolve('第一个');
+    }, 200);
+});
+const promise2 = new Promise((resolve) => {
+    setTimeout(() => {
+        resolve('第二个');
+    }, 100);
+});
+
+Promise.race([promise1, promise2])
+    .then((result) => {
+        console.log(result);  // 输出: 第二个
+    });
+```
+
+### 11. 错误处理
+
+如果没有对应的`.catch()`处理Promise拒绝，那么这些错误可能会被忽略。为避免这种情况，建议总是在链的末尾添加一个`.catch()`。
+
+```javascript
+Promise.reject('出错了')
+    .then(() => {
+        console.log('这里不会执行');
+    })
+    .catch((error) => {
+        console.error(error);  // 输出: 出错了
+    });
+```
+
+希望这些更深入的`Promise`知识点和示例可以帮助你更好地理解它的工作原理和用法。

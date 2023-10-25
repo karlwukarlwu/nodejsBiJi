@@ -1,0 +1,73 @@
+ /*
+        现在咱们这个登录，简直形同虚设，
+            HTTP协议是一个无状态的协议，
+                服务器无法区分请求是否发送自同一个客户端
+                    直接手动输入目标url就可以跳过登录
+
+            cookie
+                - cookie是HTTP协议中用来解决无状态问题的技术
+                - cookie的本质就是一个头
+                    - 服务器以响应头的形式将cookie发送给客户端
+                                从你的webstorm 发送给浏览器 并保存在浏览器
+                        客户端收到以后会将其存储，并在下次向服务器发送请求时将其传回
+                        这样服务器就可以根据cookie来识别出客户端了
+    */
+
+    单纯的发送cookie
+    app.get("/get-cookie", (req, res) => {
+
+        // 给客户端发送一个cookie
+        // 服务器发给的浏览器
+        res.cookie("username", "admin")
+
+        res.send("cookie已经发送")
+    })
+
+    获取cookie express中获取cookie
+    
+    app.get("/hello", (req, res) => {
+
+        /*
+            需要安装中间件来使得express可以解析cookie
+                1.安装cookie-parser
+                    yarn add cookie-parser
+                2.引入
+                    const cookieParser = require("cookie-parser")
+                3.设置为中间件
+                    app.use(cookieParser())
+        */
+
+        // req.cookies 用来读取客户端发回的cookie
+        console.log(req.cookies)
+
+        res.send("hello路由")
+    })
+
+    cookie的有效期
+        app.get("/set", (req, res) => {
+            /*
+                cookie是有有效期
+                    - 默认情况下cookie的有效期就是一次会话（session）
+                        会话就是一次从打开到关闭浏览器的过程
+                    - maxAge 用来设置cookie有效时间，单位是毫秒
+            */
+            res.cookie("name", "sunwukong", {
+                // expires:new Date(2022, 11, 7)
+                // 自己算一天，一个月多少毫秒...
+                maxAge: 1000 * 60 * 60 * 24 * 30
+            })
+            res.send("设置cookie")
+        })
+
+    cookie的删除
+        app.get("/delete-cookie", (req, res) => {
+            // cookie一旦发送给浏览器我们就不能在修改了
+            // 但是我们可以通过发送新的同名cookie来替换旧cookie，从而达到修改的目的
+
+            res.cookie("name", "", {
+                maxAge: 0
+            })
+
+            res.send("删除Cookie")
+        })
+

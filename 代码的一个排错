@@ -1,0 +1,19 @@
+用session.save()立刻进行存储
+
+app.post("/login", (req, res) => {
+    // 获取用户的用户名和密码
+    const { username, password } = req.body
+    if (username === "admin" && password === "123123") {
+        // 登录成功后，将用户信息放入到session中
+        // 这里仅仅是将loginUser添加到了内存中的session中
+        //  而没有将值写入到文件中
+        req.session.loginUser = username
+
+        // 为了使得session可以立刻存储，需要手动调用save
+        req.session.save(()=>{
+            res.redirect("/students/list")
+        })
+    } else {
+        res.send("用户名或密码错误")
+    }
+})

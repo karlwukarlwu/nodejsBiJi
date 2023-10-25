@@ -1,0 +1,66 @@
+需要注意的是，Node.js默认并不支持ES模块化，
+如果需要使用可以采用两种方式。
+方式一，直接将所有的js文件修改为mjs扩展名。
+方式二，修改package.json中type属性为module。
+
+包导入
+        // 引入默认导出
+    import defaultExport from "module-name";
+
+        // 将所有模块导入到指定命名空间中
+    import * as name from "module-name";
+
+        // 引入模块中的指定内容
+    import { export1 } from "module-name";
+    import { export1 , export2 } from "module-name";
+
+        // 以指定别名引入模块中的指定内容
+    import { export1 as alias1 } from "module-name";
+    import { export1 , export2 as alias2 , [...] } from "module-name";
+
+        // 引入默认和其他内容
+    import defaultExport, { export1 [ , [...] ] } from "module-name";
+    import defaultExport, * as name from "module-name";
+
+        // 引入模块
+    import "module-name";
+
+模块导出
+        // 导出变量（命名导出）
+    export let name1, name2, …, nameN;
+    export let name1 = …, name2 = …, …, nameN;
+
+        // 导出函数（命名导出）
+    export function functionName(){...}
+
+        // 导出类（命名导出）
+    export class ClassName {...}
+
+        // 导出一组
+    export { name1, name2, …, nameN };
+
+        // 重命名导出
+    export { variable1 as name1, variable2 as name2, …, nameN };
+
+        // 解构赋值后导出
+    export const { name1, name2: bar } = o;
+
+       // 默认导出
+    export default expression;
+    export default function (…) { … } // also class, function*
+    export default function name1(…) { … } // also class, function*
+    export { name1 as default, … };
+
+        // 聚合模块
+    export * from …; // 将其他模块中的全部内容导出（除了default）
+    export * as name1 from …; // ECMAScript® 2O20 将其他模块中的全部内容以指定别名导出
+    export { name1, name2, …, nameN } from …; // 将其他模块中的指定内容导出
+    export { import1 as name1, import2 as name2, …, nameN } from …; // 将其他模块中的指定内容重命名导出
+    export { default, … } from …;
+
+一个模块只能有一个默认导出
+    默认导出代码例子
+        // 设置默认导出， 一个模块中只有一个默认导出
+        // export default function sum(a, b) {
+        //     return a + b
+        // }

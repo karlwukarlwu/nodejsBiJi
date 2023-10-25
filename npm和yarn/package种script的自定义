@@ -1,0 +1,12 @@
+   scripts:
+            - 可以自定义一些命令
+            - 定义以后可以直接通过npm来执行这些命令
+            - start 和 test 可以直接通过 npm start npm test执行
+            - 其他命令需要通过npm run xxx 执行
+         比如
+          "scripts": {
+             "test": "echo \"Error: no test specified\" && exit 1"
+             "hello":dir
+           },
+
+          执行npm run hello 等于terminal中执行dir

@@ -1,0 +1,19 @@
+ 需要引入
+ const path = require("node:path")
+
+ path.resolve([…paths])
+ - 用来生成一个绝对路径
+                    相对路径：./xxx  ../xxx  xxx
+                    绝对路径：
+                        - 在计算机本地
+                            c:\xxx
+                            /User/xxxx
+                        - 在网络中
+                            http://www.xxxxx/...
+                            https://www.xxx/...
+
+// 最终形态
+// 以后在使用路径时，尽量通过path.resolve()来生成路径
+const result = path.resolve(__dirname, "./当前文件")
+const result = path.resolve(__dirname, "当前文件")
+这俩路径等效
