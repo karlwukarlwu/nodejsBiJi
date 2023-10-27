@@ -106,15 +106,17 @@ function newFile(StudentArr,res){
     })
 
     // // 将新的数据写入到json文件中
-    // fs.writeFile(
-    //     path.resolve(__dirname, "./data/students.json"),
-    //     JSON.stringify(STUDENT_ARR)
-    // ).then(()=>{
-    //     // res.redirect() 用来发起请求重定向
-    //     // 重定向的作用是告诉浏览器你向另外一个地址再发起一次请求
-    //
-    //     res.redirect("/students")
-    // }).catch(()=>{
-    //     // ....
-    // })
+  // 处理存储文件的中间件 这种写法替代的我的function
+// router.use((req, res) => {
+//     fs.writeFile(
+//         path.resolve(__dirname, "../data/students.json"),
+//         JSON.stringify(STUDENT_ARR)
+//     )
+//         .then(() => {
+//             res.redirect("/students/list")
+//         })
+//         .catch(() => {
+//             res.send("操作失败！")
+//         })
+// })
 }
